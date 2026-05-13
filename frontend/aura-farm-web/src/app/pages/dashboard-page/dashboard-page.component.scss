@@ -12,12 +12,12 @@
   gap: 16px;
   flex-wrap: wrap;
   padding: 16px 20px;
-  border-radius: var(--radius-xl);
-  background: linear-gradient(165deg, rgba(15, 23, 42, 0.88) 0%, rgba(2, 6, 23, 0.82) 100%);
+  border-radius: var(--radius-panel);
+  background: linear-gradient(165deg, rgba(15, 23, 42, 0.92) 0%, rgba(2, 6, 23, 0.86) 100%);
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-card), 0 0 48px rgba(34, 211, 238, 0.05);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   position: relative;
   overflow: hidden;
 }
@@ -27,7 +27,8 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.35), rgba(167, 139, 250, 0.22), transparent);
+  opacity: 0.95;
 }
 
 .brand {
@@ -42,26 +43,23 @@
   flex-shrink: 0;
   width: 48px;
   height: 48px;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  border-radius: var(--radius-panel);
   display: grid;
   place-items: center;
-  font-family: var(--font-display);
+  font-family: var(--font-brand);
   font-weight: 800;
   font-size: 12px;
   letter-spacing: 0.02em;
   color: var(--text-on-accent);
-  background: linear-gradient(145deg, var(--neon-cyan), var(--neon-violet));
-  box-shadow:
-    0 0 24px rgba(34, 211, 238, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: linear-gradient(145deg, var(--accent-cyan), var(--accent-violet));
+  box-shadow: var(--inset-highlight);
 }
 
 .name {
-  font-family: var(--font-display);
   font-weight: 700;
   font-size: 18px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-transform: none;
   background: linear-gradient(100deg, #f8fafc 0%, #22d3ee 45%, #c084fc 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -72,8 +70,8 @@
   margin-top: 4px;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-transform: none;
   color: var(--text-muted);
   display: flex;
   flex-wrap: wrap;
@@ -82,17 +80,16 @@
 }
 
 .pill {
-  font-family: var(--font-display);
-  font-size: 9px;
+  font-family: var(--font-ui);
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  padding: 5px 10px;
-  border-radius: 2px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
   color: var(--pill-fg);
-  background: rgba(34, 211, 238, 0.1);
+  background: rgba(34, 211, 238, 0.08);
   border: 1px solid var(--pill-border);
-  box-shadow: 0 0 16px rgba(34, 211, 238, 0.12);
 }
 
 .actions {
@@ -107,33 +104,31 @@
 .ghost {
   padding: 11px 18px;
   min-height: 42px;
-  border-radius: var(--radius-md);
-  font-family: var(--font-display);
-  font-size: 10px;
+  border-radius: var(--radius-control);
+  font-family: var(--font-ui);
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   border: 1px solid var(--border);
-  background: rgba(2, 6, 23, 0.6);
+  background: rgba(2, 6, 23, 0.55);
   color: var(--text-secondary);
   cursor: pointer;
   transition:
     background var(--transition),
     border-color var(--transition),
     color var(--transition),
-    box-shadow var(--transition),
     transform 0.15s ease;
 }
 
 .ghost:focus-visible {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-control);
 }
 
 .ghost:hover {
   color: var(--text);
-  background: rgba(34, 211, 238, 0.08);
+  background: var(--surface-hover);
   border-color: var(--border-strong);
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.12);
 }
 
 .ghost:active {
@@ -147,10 +142,10 @@
 .heroCard {
   position: relative;
   padding: 24px 24px 22px;
-  border-radius: var(--radius-xl);
-  background: linear-gradient(160deg, rgba(15, 23, 42, 0.9) 0%, rgba(2, 6, 23, 0.85) 100%);
+  border-radius: var(--radius-panel);
+  background: linear-gradient(160deg, rgba(15, 23, 42, 0.92) 0%, rgba(2, 6, 23, 0.86) 100%);
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-card), 0 0 56px rgba(167, 139, 250, 0.06);
+  box-shadow: var(--shadow-panel);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   overflow: hidden;
@@ -160,19 +155,18 @@
   content: '';
   position: absolute;
   inset: 0 0 auto 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--neon-cyan), transparent 40%, transparent 60%, var(--neon-magenta));
-  opacity: 0.9;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.35), rgba(167, 139, 250, 0.22), transparent);
+  opacity: 0.95;
 }
 
 .heroCard h1 {
   margin: 0 0 12px;
   font-size: 1.25rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: #ecfeff;
-  text-shadow: 0 0 28px rgba(34, 211, 238, 0.3);
 }
 
 .lead {
@@ -194,12 +188,12 @@
 .badge {
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
   padding: 8px 12px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-control);
   color: var(--badge-fg);
-  background: rgba(34, 211, 238, 0.08);
-  border: 1px solid rgba(34, 211, 238, 0.22);
+  background: rgba(34, 211, 238, 0.06);
+  border: 1px solid rgba(34, 211, 238, 0.18);
 }
 
 .grid {
@@ -242,13 +236,14 @@
   position: relative;
   display: block;
   padding: 16px 16px 14px 18px;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-panel);
   text-decoration: none;
   color: var(--text);
-  background: rgba(15, 23, 42, 0.65);
+  background: linear-gradient(165deg, rgba(15, 23, 42, 0.75) 0%, rgba(2, 6, 23, 0.65) 100%);
   border: 1px solid var(--border);
   min-width: 0;
   overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03);
   transition:
     transform 0.2s ease,
     border-color 0.2s ease,
@@ -263,18 +258,16 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, var(--neon-cyan), var(--neon-violet));
+  background: linear-gradient(180deg, var(--accent-cyan), var(--accent-violet));
   opacity: 0;
   transition: opacity 0.2s ease;
 }
 
 .tile:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   border-color: var(--border-strong);
-  background: rgba(34, 211, 238, 0.06);
-  box-shadow:
-    var(--shadow-lg),
-    0 0 28px rgba(34, 211, 238, 0.12);
+  background: rgba(15, 23, 42, 0.82);
+  box-shadow: var(--shadow);
 }
 
 .tile:hover::before {
@@ -283,15 +276,15 @@
 
 .tile:focus-visible {
   outline: none;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-panel);
   box-shadow: var(--focus-ring);
 }
 
 .tileTitle {
-  font-family: var(--font-display);
+  font-family: var(--font-ui);
   font-weight: 600;
-  letter-spacing: 0.04em;
-  font-size: 12px;
+  letter-spacing: 0.02em;
+  font-size: 14px;
   word-break: break-word;
   overflow-wrap: anywhere;
   color: #e0f2fe;
@@ -299,11 +292,11 @@
 
 .tileSub {
   margin-top: 10px;
-  font-family: var(--font-display);
-  font-size: 9px;
+  font-family: var(--font-ui);
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--neon-cyan);
-  opacity: 0.75;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--accent-cyan);
+  opacity: 0.85;
 }
