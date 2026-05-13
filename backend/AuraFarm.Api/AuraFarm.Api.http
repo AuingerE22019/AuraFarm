@@ -1,0 +1,6 @@
+@AuraFarm.Api_HostAddress = http://localhost:5023
+
+GET {{AuraFarm.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

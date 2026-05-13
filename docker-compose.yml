@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:18
+    container_name: aurafarm-db
+    environment:
+      POSTGRES_DB: aurafarm
+      POSTGRES_USER: aurafarm
+      POSTGRES_PASSWORD: aurafarm_dev_pw
+    ports:
+      - "5432:5432"
+    volumes:
+      - aurafarm_pgdata:/var/lib/postgresql
+      - ./db/init/00_extensions.sql:/docker-entrypoint-initdb.d/00_extensions.sql:ro
+      - ./gym_ddl.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aurafarm -d aurafarm"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  aurafarm_pgdata:
+

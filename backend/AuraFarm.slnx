@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="AuraFarm.Api/AuraFarm.Api.csproj" />
+  <Project Path="AuraFarm.Application/AuraFarm.Application.csproj" />
+  <Project Path="AuraFarm.Domain/AuraFarm.Domain.csproj" />
+  <Project Path="AuraFarm.Infrastructure/AuraFarm.Infrastructure.csproj" />
+</Solution>

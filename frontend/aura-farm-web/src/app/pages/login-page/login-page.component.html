@@ -1,0 +1,51 @@
+<div class="shell">
+  <header class="topBar">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">AF</div>
+      <div class="title">
+        <div class="name">Aura Farm</div>
+        <div class="tagline">Training intelligence stack</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="card">
+    <h1>Admin login</h1>
+    <p class="lead">Sign in to continue</p>
+    <p class="hint">Demo credentials: <strong>admin</strong> / <strong>password</strong></p>
+
+    <form (ngSubmit)="submit()" #f="ngForm" class="form">
+      <label>
+        <span>Username</span>
+        <input
+          name="username"
+          [ngModel]="username()"
+          (ngModelChange)="username.set($event)"
+          required
+          autocomplete="username"
+          placeholder="admin"
+        />
+      </label>
+
+      <label>
+        <span>Password</span>
+        <input
+          type="password"
+          name="password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          required
+          autocomplete="current-password"
+          placeholder="password"
+        />
+      </label>
+
+      <button class="btn" [disabled]="f.invalid" type="submit">Sign in</button>
+      @if (error(); as e) {
+        <div class="err">{{ e }}</div>
+      }
+    </form>
+  </div>
+
+  <footer class="footer mono">Backend API: http://localhost:5023</footer>
+</div>

@@ -1,0 +1,41 @@
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">AF</div>
+      <div>
+        <div class="name">Aura Farm</div>
+        <div class="sub">
+          Admin dashboard
+          <span class="pill">Demo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="ghost" (click)="logout()">Log out</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="heroCard">
+      <h1>Backend is ready</h1>
+      <p class="lead">
+        These are simple read-only endpoints. Click a tile to open the JSON response in your browser.
+      </p>
+      <div class="badges">
+        <span class="badge">Frontend · localhost:4200</span>
+        <span class="badge">Backend · localhost:5023</span>
+        <span class="badge">Database · localhost:5432</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid" aria-label="API endpoints">
+    @for (e of endpoints; track e) {
+      <a class="tile" [href]="'http://localhost:5023/api/' + e" target="_blank" rel="noreferrer">
+        <div class="tileTitle">/api/{{ e }}</div>
+        <div class="tileSub">GET collection</div>
+      </a>
+    }
+  </section>
+</div>

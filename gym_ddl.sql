@@ -72,9 +72,12 @@ CREATE TABLE Staff (
     address_id UUID REFERENCES Addresses(address_id) ON DELETE SET NULL,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
+    username VARCHAR(50) UNIQUE,
+    password_hash TEXT,
     email VARCHAR(100) UNIQUE,
     role user_role,
     specialization VARCHAR(100),
+    CHECK (username IS NULL OR (char_length(username) >= 3 AND username !~ '\\s')),
     CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
 );
 
@@ -109,11 +112,14 @@ CREATE TABLE Members (
     address_id UUID REFERENCES Addresses(address_id) ON DELETE SET NULL,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
+    username VARCHAR(50) UNIQUE,
+    password_hash TEXT,
     email VARCHAR(100) UNIQUE,
     is_verified_student BOOLEAN,
     date_of_birth DATE,
     registration_date TIMESTAMPTZ,
     phone VARCHAR(20),
+    CHECK (username IS NULL OR (char_length(username) >= 3 AND username !~ '\\s')),
     CHECK (date_of_birth < CURRENT_DATE - INTERVAL '14 years'),
     CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
 );
