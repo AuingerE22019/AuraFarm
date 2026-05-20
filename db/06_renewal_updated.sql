@@ -1,0 +1,2 @@
+ALTER TABLE Contracts
+  ADD COLUMN IF NOT EXISTS renewal_updated_at TIMESTAMPTZ;

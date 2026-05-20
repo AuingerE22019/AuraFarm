@@ -1,4 +1,5 @@
 using AuraFarm.Infrastructure.Persistence.Scaffold;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,6 +7,7 @@ namespace AuraFarm.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "admin,manager,receptionist")]
 public sealed class EmergencyContactsController(AuraFarmDbContext db) : ControllerBase
 {
     [HttpGet]

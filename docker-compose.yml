@@ -12,6 +12,15 @@ services:
       - aurafarm_pgdata:/var/lib/postgresql
       - ./db/init/00_extensions.sql:/docker-entrypoint-initdb.d/00_extensions.sql:ro
       - ./gym_ddl.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./db/01_packages.sql:/docker-entrypoint-initdb.d/02_packages.sql:ro
+      - ./db/02_triggers.sql:/docker-entrypoint-initdb.d/03_triggers.sql:ro
+      - ./db/init/04_staff_password_fix.sql:/docker-entrypoint-initdb.d/04_staff_password_fix.sql:ro
+      - ./db/03_all_in_bundle.sql:/docker-entrypoint-initdb.d/05_all_in_bundle.sql:ro
+      - ./db/04_contract_lifecycle.sql:/docker-entrypoint-initdb.d/06_contract_lifecycle.sql:ro
+      - ./db/05_renewal_addons.sql:/docker-entrypoint-initdb.d/07_renewal_addons.sql:ro
+      - ./db/06_renewal_updated.sql:/docker-entrypoint-initdb.d/08_renewal_updated.sql:ro
+      - ./db/07_classes_sessions_seed.sql:/docker-entrypoint-initdb.d/09_classes_sessions_seed.sql:ro
+      - ./db/08_dedupe_classes.sql:/docker-entrypoint-initdb.d/10_dedupe_classes.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U aurafarm -d aurafarm"]
       interval: 5s
@@ -20,4 +29,5 @@ services:
 
 volumes:
   aurafarm_pgdata:
+
 

@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Npgsql;
 
 namespace AuraFarm.Api.Controllers;
 
@@ -17,49 +18,66 @@ public sealed class AuthController(
     UserManager<AppUser> userManager,
     SignInManager<AppUser> signInManager,
     RoleManager<IdentityRole<Guid>> roleManager,
-    IOptions<JwtOptions> jwtOptions
+    IOptions<JwtOptions> jwtOptions,
+    IConfiguration configuration
 ) : ControllerBase
 {
+    private readonly string _connString = configuration.GetConnectionString("AuraFarm") ?? throw new InvalidOperationException("No Connection String");
+
     public sealed record RegisterRequest(string Email, string Password, string? Role);
     public sealed record LoginRequest(string Email, string Password);
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterRequest req)
+    [HttpPost("staff/login")]
+    public async Task<IActionResult> StaffLogin(LoginRequest req)
     {
-        if (string.IsNullOrWhiteSpace(req.Email) || string.IsNullOrWhiteSpace(req.Password))
-            return BadRequest("Email/Password required.");
+        await using var conn = new NpgsqlConnection(_connString);
+        await conn.OpenAsync();
 
-        var user = new AppUser { UserName = req.Email, Email = req.Email };
-        var result = await userManager.CreateAsync(user, req.Password);
-        if (!result.Succeeded)
-            return BadRequest(result.Errors.Select(e => e.Description));
+        await using var cmd = new NpgsqlCommand("SELECT staff_id, password_hash, role::text FROM Staff WHERE username = @u OR email = @u", conn);
+        cmd.Parameters.AddWithValue("u", req.Email);
 
-        var role = string.IsNullOrWhiteSpace(req.Role) ? "receptionist" : req.Role;
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new IdentityRole<Guid>(role));
-        }
+        await using var reader = await cmd.ExecuteReaderAsync();
+        if (!await reader.ReadAsync()) return Unauthorized();
 
-        await userManager.AddToRoleAsync(user, role);
-        return Ok(new { user.Id, user.Email, Role = role });
+        var staffId = reader.GetGuid(0).ToString();
+        var hash = reader.GetString(1);
+        var role = reader.GetString(2);
+        await reader.CloseAsync();
+
+        if (!BCrypt.Net.BCrypt.Verify(req.Password, hash)) return Unauthorized();
+
+        return Ok(new { access_token = GenerateJwt(staffId, req.Email, new[] { role }), roles = new[] { role } });
     }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequest req)
+    [HttpPost("member/login")]
+    public async Task<IActionResult> MemberLogin(LoginRequest req)
     {
-        var user = await userManager.FindByEmailAsync(req.Email);
-        if (user is null) return Unauthorized();
+        await using var conn = new NpgsqlConnection(_connString);
+        await conn.OpenAsync();
 
-        var ok = await signInManager.CheckPasswordSignInAsync(user, req.Password, lockoutOnFailure: false);
-        if (!ok.Succeeded) return Unauthorized();
+        await using var cmd = new NpgsqlCommand("SELECT member_id, password_hash FROM Members WHERE username = @u OR email = @u", conn);
+        cmd.Parameters.AddWithValue("u", req.Email);
 
-        var roles = await userManager.GetRolesAsync(user);
+        await using var reader = await cmd.ExecuteReaderAsync();
+        if (!await reader.ReadAsync()) return Unauthorized();
 
+        var memberId = reader.GetGuid(0).ToString();
+        var hash = reader.GetString(1);
+        await reader.CloseAsync();
+
+        if (!BCrypt.Net.BCrypt.Verify(req.Password, hash)) return Unauthorized();
+
+        return Ok(new { access_token = GenerateJwt(memberId, req.Email, new[] { "member" }), roles = new[] { "member" } });
+    }
+
+    private string GenerateJwt(string sub, string email, IEnumerable<string> roles)
+    {
         var jwt = jwtOptions.Value;
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email ?? ""),
+            new(ClaimTypes.NameIdentifier, sub),
+            new(JwtRegisteredClaimNames.Sub, sub),
+            new(JwtRegisteredClaimNames.Email, email),
         };
         claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
@@ -73,9 +91,9 @@ public sealed class AuthController(
             signingCredentials: creds
         );
 
-        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-        return Ok(new { access_token = tokenString, roles });
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
 
     [Authorize]
     [HttpGet("me")]
